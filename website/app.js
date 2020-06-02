@@ -1,6 +1,4 @@
 /* Global Variables */
-const apiKey = 
-let baseURL = `http://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&zip=`
 
 // Create a new date instance dynamically with JS
 let d = new Date();
@@ -11,34 +9,28 @@ let newDateNode = document.createTextNode(newDate);
 document.addEventListener('DOMContentLoaded', () => {document.getElementById('generate').addEventListener('click', performAction)});
 
 //callback function
-function performAction(e) {
+async function performAction(e) {
   const newZip = document.getElementById('zip').value;
   document.getElementById('date').appendChild(newDateNode);
-  getWeather(baseURL, newZip);
   let userInput = document.getElementById('feelings').value;
   let userInputNode = document.createTextNode(userInput);
   document.getElementById('content').appendChild(userInputNode)
+  let url = `/all/${newZip}/${userInput}`
+  let res = await fetch(url); //shouldn't this be the data? but it isn't showing up as that...
+  let data = await res.json();
+  let temperature = data.main.temp;//which results on temp being called on undefined
+  console.log(temperature)
+  let tempNode = document.createTextNode(temperature + ' degrees');
+  document.getElementById('temp').appendChild(tempNode);
 }
 
-//async GET request
-const getWeather = async(baseURL, zip)=>{
-
-  const res = await fetch(baseURL+zip) //fetch is getting this data from the URL
-  try {
-    const data = await res.json(); //
-    let tempKelvins = data.main.temp;
-    let tempFarenheit = Math.round((tempKelvins - 273.15) * 9/5 + 32);
-    let tempFarenheitNode = document.createTextNode(tempFarenheit + ' degrees Farenheit');
-    document.getElementById('temp').appendChild(tempFarenheitNode);
-
-  } catch(error) {
-    console.log('error', error);
-  }
-}
+//event listener
+document.addEventListener('DOMContentLoaded', () => {document.getElementById('generate').addEventListener('click', postData)});
+//is this right? how do I check if anything is being stored in projectData
 
 //async POST request
 const postData = async (url = '', data = {}) => {
-  console.log(data);
+    console.log(data);
     const response = await fetch(url, {
       method: 'POST',
       credentials: 'same-origin',
