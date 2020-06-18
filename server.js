@@ -37,7 +37,7 @@ app.use(express.static('website'));
 // Setup Server
 
 const port = 8000;
-const server = app.listen(port, listening);
+const server = app.listen(process.env.PORT || 4000);
 
 function listening() {
   console.log('server running');
