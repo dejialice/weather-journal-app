@@ -1,14 +1,21 @@
 // Setup empty JS object to act as endpoint for all routes
 const fetch = require("node-fetch");
-const apiKey = '69cb5eeae6b05dc9b67844b8b7877f00&units=imperial'
+const apiKey = '85c5b82d79f71b445251430dba16a520&units=imperial'
 let baseURL = `http://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&zip=`
-projectData = {};
+projectData = [];
 //routes are all the different pages in a website for the client side
 //routes actions: read info - ex. about page, post - ex. forms, edit and delete
 
 // Require Express to run server and routes
 var cors = require('cors');
 const express = require('express');
+
+//connecting the api key that we saved in .env
+require('dotenv').config()
+
+//import an instance of database connection
+const database = require('./mongoObj')
+database.init();
 
 // Start up an instance of app
 
@@ -61,15 +68,14 @@ const getWeather = async(baseURL, zip)=>{
 
 //POST route
 
-app.post('/addData/:temperature/:newDate/:userInput/', addData) //umm is this the right url? should I be asking for zip, user input and date when
-
-function addData (req, res) {
+app.post('/addData', (req, res) => {
   let newData = req.body;
   let newEntry = {
-    temperature: newData.temperature,
-    date: newData.newDate,
-    userResponse: newData.userInput
+    temperature: newData.temp,
+    zip: newData.zip,
+    feelings: newData.feelings
   }
   projectData.push(newEntry)
   console.log(projectData)
-}
+
+})
