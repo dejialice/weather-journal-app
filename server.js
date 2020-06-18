@@ -75,7 +75,8 @@ app.post('/addData', (req, res) => {
     zip: newData.zip,
     feelings: newData.feelings
   }
-  projectData.push(newEntry)
+  projectData.push(database.userInfo.insertOne({newEntry}))
   console.log(projectData)
+  res.redirect('/');
 
 })
